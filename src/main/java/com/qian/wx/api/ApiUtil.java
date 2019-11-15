@@ -1,6 +1,6 @@
 package com.qian.wx.api;
 
-import com.qian.wx.invocation.APIInvocationHandler;
+import com.qian.wx.proxy.APIInvocationHandler;
 
 import java.lang.reflect.Proxy;
 
