@@ -35,6 +35,7 @@ public class APIInvocationHandler implements InvocationHandler {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Exception {
+        checkAnnotation(proxy,method,args);
         Class<?> returnType = method.getReturnType();
         String result = doAPIRequest(method, args);
         try {
@@ -48,6 +49,11 @@ public class APIInvocationHandler implements InvocationHandler {
             }
         } catch (Exception e) {
             throw new RuntimeException(result + " can't parse to {}" + returnType);
+        }
+    }
+    private void checkAnnotation(Object proxy, Method method, Object[] args){
+        if(!method.isAnnotationPresent(RelativePath.class)){
+            throw new RuntimeException(method.toString()+" must with annotation ＠RelativePath ");
         }
     }
 
@@ -67,7 +73,7 @@ public class APIInvocationHandler implements InvocationHandler {
                                           Object[] paramsValue) {
         StringBuffer sb = new StringBuffer();
         sb.append(domain);
-        sb.append(annotation.path());
+        sb.append(annotation.value());
         sb.append("?access_token=");
         sb.append(getAccessToken());
         sb.append("&");
@@ -123,10 +129,12 @@ public class APIInvocationHandler implements InvocationHandler {
 
         String url = getUrlWithAddressParams(annotation, parameters, args);
 
-        Class<? extends Parameter> aClass = parameters[0].getClass();
         String s = "";
-        if (!aClass.isPrimitive()) {
-            s = JSON.toJSONString(args[0]);
+        if(args!=null&&args.length>0){
+            Class<? extends Parameter> aClass = parameters[0].getClass();
+            if (!aClass.isPrimitive()) {
+                s = JSON.toJSONString(args[0]);
+            }
         }
 
         RequestBody requestBody = RequestBody.create(MediaType.get("application/json; charset=utf-8"), s);
