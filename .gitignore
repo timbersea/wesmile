@@ -107,3 +107,7 @@ buildNumber.properties
 /src/test/java/MYAPITest.java
 #for test log
 /src/main/resources/logback-test.xml
+/src/main/resources/
+/src/test/resources/
+#define your config in this file which ignored
+/src/test/java/com/qian/wx/api/config/MyAPIConfig.java
