@@ -12,8 +12,8 @@
 
 #### 安装教程
 ```
-git clone https://gitee.com/ngitfk/ wesmile.git
-cd  ./ wesmile
+git clone https://gitee.com/ngitfk/wesmile.git
+cd  ./wesmile
 mvn clean install
 ```
 或者
