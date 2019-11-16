@@ -1,16 +1,14 @@
 package com.qian.wx.model.result;
 
-import com.alibaba.fastjson.annotation.JSONField;
-
 public class AccessToken {
-    @JSONField(name = "access_token")
-    private String accessToken;
+
+    private String access_token;
     private long createTimestamp=System.currentTimeMillis();
 
     private Integer expires_in;
 
     public AccessToken(String accessToken, long createTimestamp) {
-        this.accessToken = accessToken;
+        this.access_token = accessToken;
         this.createTimestamp = createTimestamp;
     }
 
@@ -19,11 +17,11 @@ public class AccessToken {
     }
 
     public String getAccessToken() {
-        return accessToken;
+        return access_token;
     }
 
     public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
+        this.access_token = accessToken;
     }
 
     public long getCreateTimestamp() {

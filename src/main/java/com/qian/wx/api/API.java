@@ -11,14 +11,15 @@ import com.qian.wx.model.result.UserList;
 
 public interface API {
 
-    @RelativePath(path = "/cgi-bin/user/info")
+    @RelativePath("/cgi-bin/user/info")
     UserInfo userInfo(@ParamName("openid") String openid, @ParamName("lang") String lang);
 
-    @RelativePath(path = "/cgi-bin/user/get")
+    @RelativePath("/cgi-bin/user/get")
     UserList userList(@ParamName("next_openid") String openid);
 
 
-    @RelativePath(path = "/datacube/getusersummary")
+    @RelativePath("/datacube/getusersummary")
     Getusersummary getusersummary(@JsonBody UserAnalyze userAnalyze);
 
+    Getusersummary aa(@JsonBody UserAnalyze userAnalyze);
 }
