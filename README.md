@@ -1,4 +1,4 @@
-# wx
+#  wesmile
 
 #### 介绍
 用过别人写的一些微信公众号实现的SDK,感觉不是很好用，繁琐不说,实现也不算是很优雅，
@@ -12,8 +12,8 @@
 
 #### 安装教程
 ```
-git clone https://gitee.com/ngitfk/wx.git
-cd  ./wx
+git clone https://gitee.com/ngitfk/ wesmile.git
+cd  ./ wesmile
 mvn clean install
 ```
 或者
@@ -25,7 +25,7 @@ mvn clean install -DskipTests=true
 ```
 <dependency>
     <groupId>com.xlvren</groupId>
-    <artifactId>wx</artifactId>
+    <artifactId>wesmile</artifactId>
     <version>1.0-SNAPSHOT</version>
  </dependency>
 ```
