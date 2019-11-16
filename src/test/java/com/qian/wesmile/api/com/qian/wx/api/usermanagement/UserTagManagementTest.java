@@ -29,5 +29,15 @@ public class UserTagManagementTest extends APITestBase<UserTagManagement> {
         result = api.createTag(userTag);
     }
 
+    @Test
+    public void editingTags() {
+        UserTag userTag = new UserTag();
+        UserTag.TagBean tagBean = new UserTag.TagBean();
+        tagBean.setId(100);
+        tagBean.setName(Math.random() + "");
+        userTag.setTag(tagBean);
+        api.editingTags(userTag);
+    }
+
 
 }

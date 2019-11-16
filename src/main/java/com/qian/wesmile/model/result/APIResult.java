@@ -21,6 +21,6 @@ public class APIResult {
     }
 
     public boolean success(){
-        return errcode==null;
+        return errcode == null || errcode == 0;
     }
 }

@@ -36,8 +36,11 @@ public class APIInvocationHandler implements InvocationHandler {
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Exception {
         checkAnnotation(proxy,method,args);
-        Class<?> returnType = method.getReturnType();
         String result = doAPIRequest(method, args);
+        Class<?> returnType = method.getReturnType();
+        if (returnType.getName().equals("void")) {
+            return null;
+        }
         try {
             //TODO 这里无法正常解析出数据到底是返回一个属性是空的对象还是直接招聘运行时异常有等商榷
             APIResult apiResult = JSON.parseObject(result, APIResult.class);
@@ -89,7 +92,6 @@ public class APIInvocationHandler implements InvocationHandler {
             }
             sb.append("&");
         }
-        log.debug(sb.toString());
         return sb.toString();
 
     }
@@ -139,6 +141,7 @@ public class APIInvocationHandler implements InvocationHandler {
 
         RequestBody requestBody = RequestBody.create(MediaType.get("application/json; charset=utf-8"), s);
         Request build = builder.url(url).post(requestBody).build();
+        log.debug("url {} \r\n body{}", url, s);
         try (Response response = client.newCall(build).execute()) {
 
             String result = new String(response.body().bytes());

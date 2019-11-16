@@ -27,5 +27,5 @@ public interface UserTagManagement {
      * Editing Tags
      */
     @RelativePath("/cgi-bin/tags/update")
-    void editingTags(UserTag userTag);
+    void editingTags(@JsonBody UserTag userTag);
 }
