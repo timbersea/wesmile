@@ -1,6 +1,7 @@
 package com.qian.wesmile.api;
 
 import com.qian.wesmile.proxy.APIInvocationHandler;
+import com.qian.wesmile.request.AbstractHttpRequester;
 
 import java.lang.reflect.Proxy;
 
@@ -18,6 +19,14 @@ public class Api {
 
     public Api(String appid, String appSecret) {
         apiInvocationHandler = new APIInvocationHandler(DEFAULT_DOMAIN, appid, appSecret);
+    }
+
+    public Api(String appid, String appSecret, String getDomain, AbstractHttpRequester httpRequester) {
+        this.apiInvocationHandler = new APIInvocationHandler(getDomain, appid, appSecret, httpRequester);
+    }
+
+    public Api(String appid, String appSecret, AbstractHttpRequester httpRequester) {
+        apiInvocationHandler = new APIInvocationHandler(DEFAULT_DOMAIN, appid, appSecret, httpRequester);
     }
 
     /**
