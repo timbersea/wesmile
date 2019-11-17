@@ -1,17 +1,16 @@
 package com.qian.wesmile.proxy;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONException;
 import com.qian.wesmile.annotation.JsonBody;
 import com.qian.wesmile.annotation.ParamName;
 import com.qian.wesmile.annotation.RelativePath;
 import com.qian.wesmile.model.result.APIResult;
 import com.qian.wesmile.model.result.AccessToken;
-import okhttp3.*;
+import com.qian.wesmile.request.AbstractHttpRequester;
+import com.qian.wesmile.request.DefalutHttpRequester;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -20,17 +19,25 @@ public class APIInvocationHandler implements InvocationHandler {
     private static final Logger log = LoggerFactory.getLogger(APIInvocationHandler.class);
 
     private static String GET_ACCESS_TOKEN_URL_PATTERN = "%s/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s";
-    private static OkHttpClient client = new OkHttpClient();
-    private static Request.Builder builder = new Request.Builder();
     protected String domain;
     protected String appid;
     protected String appSecret;
-    private AccessToken accessToken;
+    private static AccessToken accessToken;
+
+    private AbstractHttpRequester httpRequester;
+
+    public APIInvocationHandler(String domain, String appid, String appSecret, AbstractHttpRequester httpRequester) {
+        this.domain = domain;
+        this.appid = appid;
+        this.appSecret = appSecret;
+        this.httpRequester = httpRequester;
+    }
 
     public APIInvocationHandler(String domain, String appid, String appSecret) {
         this.domain = domain;
         this.appid = appid;
         this.appSecret = appSecret;
+        this.httpRequester = new DefalutHttpRequester();
     }
 
     @Override
@@ -112,19 +119,10 @@ public class APIInvocationHandler implements InvocationHandler {
 
     private AccessToken getAccessTokenByRequest() {
         String url = String.format(GET_ACCESS_TOKEN_URL_PATTERN, domain, appid, appSecret);
-        Request request = builder.url(url).build();
-        String string = "";
-        try (Response response = client.newCall(request).execute()) {
-            string = response.body().string();
-            log.debug("request accessToken response {}", string);
-            AccessToken accessToken = JSON.parseObject(string, AccessToken.class);
-            this.accessToken = accessToken;
-            return accessToken;
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        } catch (JSONException e) {
-            throw new RuntimeException("can't pare accessToken from response " + string + " please check config");
-        }
+        String result = httpRequester.doRequest(url, null);
+        AccessToken accessToken = JSON.parseObject(result, AccessToken.class);
+        this.accessToken = accessToken;
+        return accessToken;
     }
 
     private String doAPIRequest(Method method, Object[] args) {
@@ -142,16 +140,7 @@ public class APIInvocationHandler implements InvocationHandler {
             }
         }
 
-        RequestBody requestBody = RequestBody.create(MediaType.get("application/json; charset=utf-8"), s);
-        Request build = builder.url(url).post(requestBody).build();
-        log.debug("url {} \r\n body{}", url, s);
-        try (Response response = client.newCall(build).execute()) {
-
-            String result = new String(response.body().bytes());
-            log.debug("response {}", result);
-            return result;
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
+        String result = httpRequester.doRequest(url, s);
+        return result;
     }
 }
