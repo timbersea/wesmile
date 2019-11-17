@@ -35,10 +35,13 @@ public class APIInvocationHandler implements InvocationHandler {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Exception {
-        checkAnnotation(proxy,method,args);
+        if (Object.class.equals(method.getDeclaringClass())) {
+            return method.invoke(this, args);
+        }
+        checkAnnotation(method);
         String result = doAPIRequest(method, args);
         Class<?> returnType = method.getReturnType();
-        if (returnType.getName().equals("void")) {
+        if (void.class == returnType) {
             return null;
         }
         try {
@@ -46,17 +49,17 @@ public class APIInvocationHandler implements InvocationHandler {
             APIResult apiResult = JSON.parseObject(result, APIResult.class);
             if (apiResult.success()) {
                 return JSON.parseObject(result, returnType);
-            }
-            else {
+            } else {
                 throw new RuntimeException(result + " can't parse to {}" + returnType);
             }
         } catch (Exception e) {
             throw new RuntimeException(result + " can't parse to {}" + returnType);
         }
     }
-    private void checkAnnotation(Object proxy, Method method, Object[] args){
-        if(!method.isAnnotationPresent(RelativePath.class)){
-            throw new RuntimeException(method.toString()+" must with annotation ＠RelativePath ");
+
+    private void checkAnnotation(Method method) {
+        if (!method.isAnnotationPresent(RelativePath.class)) {
+            throw new RuntimeException(method.toString() + " must with annotation ＠RelativePath ");
         }
     }
 
@@ -132,7 +135,7 @@ public class APIInvocationHandler implements InvocationHandler {
         String url = getUrlWithAddressParams(annotation, parameters, args);
 
         String s = "";
-        if(args!=null&&args.length>0){
+        if (args != null && args.length > 0) {
             Class<? extends Parameter> aClass = parameters[0].getClass();
             if (!aClass.isPrimitive()) {
                 s = JSON.toJSONString(args[0]);
