@@ -110,4 +110,3 @@ buildNumber.properties
 /src/main/resources/
 /src/test/resources/
 #define your config in this file which ignored
-/src/test/java/com/qian/wesmile/api/config/MyAPIConfig.java
