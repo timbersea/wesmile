@@ -1,6 +1,9 @@
 package com.qian.wesmile.api;
 
 import com.alibaba.fastjson.JSON;
+import com.qian.wesmile.WeSmile;
+import com.qian.wesmile.WeSmileUtil;
+import com.qian.wesmile.api.analytics.UserAnalysisData;
 import com.qian.wesmile.api.config.Config;
 import com.qian.wesmile.api.config.MyAPIConfig;
 import org.junit.After;
@@ -22,14 +25,19 @@ public abstract class APITestBase<T> {
 
     @Before
     public void setUp() throws Exception {
-        ApiUtil.init(config.getAppid(), config.getAppsecret());
+        WeSmileUtil.init(config.getAppid(), config.getAppsecret());
         ParameterizedType pt=(ParameterizedType) this.getClass().getGenericSuperclass();
         Class<T> aClass = (Class) pt.getActualTypeArguments()[0];
-       api= ApiUtil.getInstance(aClass);
+        api = WeSmileUtil.getInstance(aClass);
     }
 
     @After
     public void logResult() {
         log.info(JSON.toJSONString(result));
+        WeSmile weSmile = new WeSmile();
+        weSmile.getAbstractHttpRequester().setParam("fdf");
+
+        UserAnalysisData instance = weSmile.getInstance(UserAnalysisData.class);
+        //instance.getusercumulate();
     }
 }

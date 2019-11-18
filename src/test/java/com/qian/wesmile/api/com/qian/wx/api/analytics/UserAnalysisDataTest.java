@@ -6,8 +6,11 @@ import com.qian.wesmile.model.param.UserAnalyze;
 import com.qian.wesmile.model.result.Getusercumulate;
 import com.qian.wesmile.model.result.Getusersummary;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class UserAnalysisDataTest extends APITestBase<UserAnalysisData> {
+    private static final Logger log = LoggerFactory.getLogger(UserAnalysisDataTest.class);
 
     @Test
     public void getusersummary() {
@@ -16,6 +19,12 @@ public class UserAnalysisDataTest extends APITestBase<UserAnalysisData> {
         userAnalyze.setEnd_date("2014-12-07");
         Getusersummary getusersummary = api.getusersummary(userAnalyze);
         result = getusersummary;
+    }
+
+    @Test
+    public void test() {
+        log.info(api.toString());
+        log.info("{}", api.hashCode());
     }
 
     @Test
