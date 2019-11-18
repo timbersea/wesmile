@@ -19,7 +19,6 @@ public class WeSmile {
 
 
     public WeSmile() {
-        this.apiInvocationHandler = new APIInvocationHandler(DEFAULT_DOMAIN, appid, appSecret);
     }
 
     public WeSmile(String appid, String appSecret, String getDomain) {
@@ -46,6 +45,10 @@ public class WeSmile {
      * @return the instance
      */
     public <T> T getInstance(Class<T> clazz) {
+        if (apiInvocationHandler == null) {
+            this.apiInvocationHandler = new APIInvocationHandler(DEFAULT_DOMAIN, appid, appSecret);
+        }
+
         T proxy = null;
         Object o = proxyCache.get(clazz);
         if (o == null) {
