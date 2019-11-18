@@ -121,7 +121,10 @@ public class APIInvocationHandler implements InvocationHandler {
         String url = String.format(GET_ACCESS_TOKEN_URL_PATTERN, domain, appid, appSecret);
         String result = httpRequester.doRequest(url, null);
         AccessToken accessToken = JSON.parseObject(result, AccessToken.class);
-        this.accessToken = accessToken;
+        if (accessToken.getAccessToken() == null || accessToken.getAccessToken().length() == 0) {
+            throw new RuntimeException("can't parse access token from " + result);
+        }
+        APIInvocationHandler.accessToken = accessToken;
         return accessToken;
     }
 
