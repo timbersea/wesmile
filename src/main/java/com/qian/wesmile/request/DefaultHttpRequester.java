@@ -7,10 +7,13 @@ import org.slf4j.LoggerFactory;
 /**
  * @author wuhuaiqian
  */
-public class DefalutHttpRequester extends AbstractHttpRequester {
-    private static final Logger log = LoggerFactory.getLogger(DefalutHttpRequester.class);
-    private static OkHttpClient client = new OkHttpClient();
-    private static Request.Builder builder = new Request.Builder();
+public class DefaultHttpRequester implements HttpRequester {
+
+    private static final Logger log = LoggerFactory.getLogger(DefaultHttpRequester.class);
+
+
+    protected static OkHttpClient client = new OkHttpClient();
+    protected static Request.Builder builder = new Request.Builder();
 
     @Override
     public String doRequest(String url, String body) {
@@ -29,4 +32,10 @@ public class DefalutHttpRequester extends AbstractHttpRequester {
             throw new RuntimeException(e.getMessage(), e);
         }
     }
+
+    @Override
+    public String getAccessToken() {
+        return null;
+    }
+
 }

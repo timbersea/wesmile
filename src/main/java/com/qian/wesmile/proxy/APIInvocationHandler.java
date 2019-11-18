@@ -3,6 +3,8 @@ package com.qian.wesmile.proxy;
 import com.alibaba.fastjson.JSON;
 import com.qian.wesmile.annotation.RelativePath;
 import com.qian.wesmile.model.result.APIResult;
+import com.qian.wesmile.request.DefaultHttpRequester;
+import com.qian.wesmile.request.PlainTextRequestGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,14 +24,12 @@ public class APIInvocationHandler implements InvocationHandler {
         }
         checkAnnotation(method);
 
-        String result = "";
-        //this method access token is different from others
-        if (method.getName().equals("oauth2")) {
+        PlainTextRequestGenerator generator = new PlainTextRequestGenerator(method, args);
+        String url = generator.getUrl();
+        String jsonBody = generator.getJsonBody();
 
-            result = "";
-        } else {
-            result = "";
-        }
+        DefaultHttpRequester defaultHttpRequester = new DefaultHttpRequester();
+        String result = defaultHttpRequester.doRequest(url, jsonBody);
 
         //String result = doAPIRequest(method, args);
         Class<?> returnType = method.getReturnType();
