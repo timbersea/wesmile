@@ -16,7 +16,7 @@ public class AccessToken {
     }
 
     public boolean isExpire() {
-        return access_token == null || System.currentTimeMillis() - createTimestamp > 7200;
+        return access_token == null || System.currentTimeMillis() - createTimestamp > 7200 * 1000;
     }
 
     public String getAccessToken() {
