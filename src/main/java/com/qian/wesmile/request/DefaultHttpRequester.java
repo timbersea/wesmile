@@ -2,6 +2,7 @@ package com.qian.wesmile.request;
 
 import com.alibaba.fastjson.JSON;
 import com.qian.wesmile.WeSmile;
+import com.qian.wesmile.model.result.APIResult;
 import com.qian.wesmile.model.result.AccessToken;
 import okhttp3.*;
 import org.slf4j.Logger;
@@ -33,11 +34,27 @@ public class DefaultHttpRequester implements HttpRequester {
         try (Response response = client.newCall(builder.build()).execute()) {
 
             String result = new String(response.body().bytes());
+            APIResult apiResult = JSON.parseObject(result, APIResult.class);
+            if (apiResult.success()) {
+                return result;
+            }
+            else if (apiResult.getErrcode() == 42001) {
+                onAccessTokenExpire();
+                doRequest(url, body);
+            }
+            else {
+                throw new RuntimeException("can't get correct result from " + result);
+            }
+
             log.debug("response {}", result);
             return result;
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage(), e);
         }
+    }
+
+    private void onAccessTokenExpire() {
+        DefaultHttpRequester.accessToken = null;
     }
 
     @Override
