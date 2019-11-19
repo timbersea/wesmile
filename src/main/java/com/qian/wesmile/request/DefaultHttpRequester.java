@@ -14,11 +14,7 @@ import org.slf4j.LoggerFactory;
 public class DefaultHttpRequester implements HttpRequester {
     protected static AccessToken accessToken = new AccessToken();
     private static String GET_ACCESS_TOKEN_URL_PATTERN = "%s/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s";
-
-
     private static final Logger log = LoggerFactory.getLogger(DefaultHttpRequester.class);
-
-
     protected static OkHttpClient client = new OkHttpClient();
     protected static Request.Builder builder = new Request.Builder();
 
@@ -67,7 +63,9 @@ public class DefaultHttpRequester implements HttpRequester {
                 String result = new String(response.body().bytes());
                 log.debug("response {}", result);
                 AccessToken accessToken = JSON.parseObject(result, AccessToken.class);
-                DefaultHttpRequester.accessToken = accessToken;
+                if (url.contains("/sns/oauth2/")) {//这个接口的access token和其它接口的不是同一个东西
+                    DefaultHttpRequester.accessToken = accessToken;
+                }
                 return accessToken;
             } catch (Exception e) {
                 throw new RuntimeException(e.getMessage(), e);
