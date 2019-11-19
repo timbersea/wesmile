@@ -24,14 +24,14 @@ mvn clean install -DskipTests=true
 添加依赖
 ```
 <dependency>
-    <groupId>com.xlvren</groupId>
+    <groupId>com.qian</groupId>
     <artifactId>wesmile</artifactId>
     <version>1.0-SNAPSHOT</version>
  </dependency>
 ```
 ```
 //init with your properties
- ApiUtil.init(config.getAppid(), config.getAppsecret());
+ WeSmileUtil.init(config.getAppid(), config.getAppsecret());
 
 UserAnalysisData api=ApiUtil.getInstance(UserAnalysisData.class)
 
