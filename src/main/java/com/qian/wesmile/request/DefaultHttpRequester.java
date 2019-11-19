@@ -52,7 +52,7 @@ public class DefaultHttpRequester implements HttpRequester {
     }
 
     private void onAccessTokenExpire() {
-        DefaultHttpRequester.accessToken = null;
+        DefaultHttpRequester.accessToken.setCreateTimestamp(-1);
     }
 
     @Override
