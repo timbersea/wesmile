@@ -31,12 +31,12 @@ public class DefaultHttpRequester implements HttpRequester {
 
             String result = new String(response.body().bytes());
             APIResult apiResult = JSON.parseObject(result, APIResult.class);
-            if (apiResult.success()) {
-                return result;
-            }
-            else if (apiResult.getErrcode() == 42001) {
+            if (apiResult.getErrcode() == 42001) {
                 onAccessTokenExpire();
                 doRequest(url, body);
+            }
+            else if (apiResult.success()) {
+                return result;
             }
             else {
                 throw new RuntimeException("can't get correct result from " + result);
