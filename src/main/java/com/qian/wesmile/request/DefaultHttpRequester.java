@@ -30,13 +30,15 @@ public class DefaultHttpRequester implements HttpRequester {
         try (Response response = client.newCall(builder.build()).execute()) {
 
             String result = new String(response.body().bytes());
+            log.debug("result {}", result);
             APIResult apiResult = JSON.parseObject(result, APIResult.class);
-            if (apiResult.getErrcode() == 42001) {
+
+            if (apiResult.success()) {
+                return result;
+            }
+            if (apiResult.getErrcode() == 42001 || apiResult.getErrcode() == 40001) {
                 onAccessTokenExpire();
                 doRequest(url, body);
-            }
-            else if (apiResult.success()) {
-                return result;
             }
             else {
                 throw new RuntimeException("can't get correct result from " + result);
