@@ -55,15 +55,17 @@ public class DefaultHttpRequester implements HttpRequester {
 
     @Override
     public AccessToken getAccessToken() {
-        if (DefaultHttpRequester.accessToken == null || DefaultHttpRequester.accessToken.isExpire()) {
+        if (DefaultHttpRequester.accessToken.isExpire()) {
             String url = String.format(GET_ACCESS_TOKEN_URL_PATTERN, WeSmile.domain, WeSmile.appid, WeSmile.appSecret);
+            log.debug("access token {} expired now do request", DefaultHttpRequester.accessToken);
             builder.url(url);
+            log.debug("get new access token url:{}", url);
             try (Response response = client.newCall(builder.build()).execute()) {
 
                 String result = new String(response.body().bytes());
-                log.debug("response {}", result);
+                log.debug("get new access  response {}", result);
                 AccessToken accessToken = JSON.parseObject(result, AccessToken.class);
-                if (url.contains("/sns/oauth2/")) {//这个接口的access token和其它接口的不是同一个东西
+                if (!url.contains("/sns/oauth2/")) {//这个接口的access token和其它接口的不是同一个东西
                     DefaultHttpRequester.accessToken = accessToken;
                 }
                 return accessToken;
@@ -72,6 +74,7 @@ public class DefaultHttpRequester implements HttpRequester {
             }
         }
         else {
+            log.debug("use cached access token {}", DefaultHttpRequester.accessToken);
             return DefaultHttpRequester.accessToken;
         }
 

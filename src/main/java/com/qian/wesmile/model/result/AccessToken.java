@@ -34,4 +34,13 @@ public class AccessToken {
     public void setCreateTimestamp(long createTimestamp) {
         this.createTimestamp = createTimestamp;
     }
+
+    @Override
+    public String toString() {
+        return "AccessToken{" +
+                "access_token='" + access_token + '\'' +
+                ", createTimestamp=" + createTimestamp +
+                ", expires_in=" + expires_in +
+                '}';
+    }
 }
