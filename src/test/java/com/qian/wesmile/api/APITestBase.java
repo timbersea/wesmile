@@ -35,7 +35,6 @@ public abstract class APITestBase<T> {
     public void logResult() {
         log.info(JSON.toJSONString(result));
         WeSmile weSmile = new WeSmile();
-        weSmile.getAbstractHttpRequester().setParam("fdf");
 
         UserAnalysisData instance = weSmile.getInstance(UserAnalysisData.class);
         //instance.getusercumulate();

@@ -26,7 +26,7 @@ public interface GetUserBasicInformation {
      * @param grant_type use default vale authorization_code
      * @return
      */
-    @RelativePath("/sns/oauth2/")
+    @RelativePath("/sns/oauth2/access_token")
     GetOpenId oauth2(@ParamName("appid") String appid,
                      @ParamName("secret") String secret,
                      @ParamName("code") String code,
@@ -38,7 +38,7 @@ public interface GetUserBasicInformation {
      *
      * @param accessToken
      * @param openid
-     * @param lang
+     * @param lang  返回国家地区语言版本，zh_CN 简体，zh_TW 繁体，en 英语
      * @return
      */
     @RelativePath("/sns/userinfo")

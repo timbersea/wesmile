@@ -2,7 +2,8 @@ package com.qian.wesmile.model.result;
 
 public class AccessToken {
 
-    private String access_token;
+    private String access_token = "27_9NykbKgI33D2" +
+            "-VErRNMi_eArNql_ctnFaRaYAJA_VjxC3bZIIJZYjonz10emxuYnfpI1M_D9N1InjsP_EIGy8_fWGq0312_UpUKOex6ejEuunZNoXih6hNVaBwOGKLRx9JqARxPKIRaIqsoCOEKiACARHN";
     private long createTimestamp=System.currentTimeMillis();
 
     private Integer expires_in;
@@ -12,8 +13,12 @@ public class AccessToken {
         this.createTimestamp = createTimestamp;
     }
 
+    public AccessToken() {
+    }
+
     public boolean isExpire(){
-        return System.currentTimeMillis()-createTimestamp>7200;
+        return false;
+        // return System.currentTimeMillis()-createTimestamp>7200;
     }
 
     public String getAccessToken() {

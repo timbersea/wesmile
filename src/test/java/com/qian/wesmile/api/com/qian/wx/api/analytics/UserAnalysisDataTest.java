@@ -30,8 +30,8 @@ public class UserAnalysisDataTest extends APITestBase<UserAnalysisData> {
     @Test
     public void getusercumulate() {
         UserAnalyze userAnalyze = new UserAnalyze();
-        userAnalyze.setBegin_date("2014-12-02");
-        userAnalyze.setEnd_date("2014-12-07");
+        userAnalyze.setBegin_date("2019-11-11");
+        userAnalyze.setEnd_date("2019-11-16");
         Getusercumulate getusersummary = api.getusercumulate(userAnalyze);
         result = getusersummary;
     }

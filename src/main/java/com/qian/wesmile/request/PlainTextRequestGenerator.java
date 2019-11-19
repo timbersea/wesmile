@@ -25,13 +25,20 @@ public class PlainTextRequestGenerator implements RequestGenerator {
     public String getUrl() {
         RelativePath annotation = method.getAnnotation(RelativePath.class);
         Parameter[] parameters = method.getParameters();
+        String path = annotation.value();
 
         StringBuffer sb = new StringBuffer();
         sb.append(WeSmile.domain);
-        sb.append(annotation.value());
-        sb.append("?access_token=");
-        sb.append("%s");
-        sb.append("&");
+        sb.append(path);
+        //如果不是这个接口的话access_token是内部统一处理的,这个接口的access_token以在接口上以参数的形式传进来的
+        if (!"/sns/userinfo".equals(path) && !"/sns/oauth2/access_token".equals(path)) {
+            sb.append("?access_token=");
+            sb.append("%s");
+            sb.append("&");
+        }
+        else {
+            sb.append("?");
+        }
         for (int i = 0; i < parameters.length; i++) {
             Object value = paramsValue[i];
             Parameter p = parameters[i];
@@ -50,13 +57,12 @@ public class PlainTextRequestGenerator implements RequestGenerator {
 
     @Override
     public String getJsonBody() {
-        Parameter[] parameters = method.getParameters();
         if (paramsValue != null && paramsValue.length > 0) {
-            Class<? extends Parameter> aClass = parameters[0].getClass();
-            if (!aClass.isPrimitive()) {
+            Class<?> aClass = paramsValue[0].getClass();
+            if (!aClass.isPrimitive() && !aClass.equals(String.class)) {
                 return JSON.toJSONString(paramsValue[0]);
             }
         }
-        return "{}";
+        return null;
     }
 }
