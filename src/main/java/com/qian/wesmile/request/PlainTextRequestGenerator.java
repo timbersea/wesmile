@@ -12,7 +12,7 @@ import java.lang.reflect.Parameter;
 /**
  * @author wuhuaiqian
  */
-public class PlainTextRequestGenerator implements RequestGenerator {
+public final class PlainTextRequestGenerator {
     private Method method;
     private Object[] paramsValue;
 
@@ -21,7 +21,6 @@ public class PlainTextRequestGenerator implements RequestGenerator {
         this.paramsValue = paramsValue;
     }
 
-    @Override
     public String getUrl() {
         RelativePath annotation = method.getAnnotation(RelativePath.class);
         Parameter[] parameters = method.getParameters();
@@ -55,7 +54,6 @@ public class PlainTextRequestGenerator implements RequestGenerator {
     }
 
 
-    @Override
     public String getJsonBody() {
         if (paramsValue != null && paramsValue.length > 0) {
             Class<?> aClass = paramsValue[0].getClass();
