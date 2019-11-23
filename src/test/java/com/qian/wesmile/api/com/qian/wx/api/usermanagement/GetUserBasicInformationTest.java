@@ -4,6 +4,7 @@ import com.qian.wesmile.WeSmile;
 import com.qian.wesmile.api.APITestBase;
 import com.qian.wesmile.api.usermanagement.GetUserBasicInformation;
 import com.qian.wesmile.model.param.UserTag;
+import com.qian.wesmile.model.result.GetOpenId;
 import org.junit.Test;
 
 public class GetUserBasicInformationTest extends APITestBase<GetUserBasicInformation> {
@@ -15,7 +16,8 @@ public class GetUserBasicInformationTest extends APITestBase<GetUserBasicInforma
         tagBean.setId(100);
         tagBean.setName(Math.random() + "");
         userTag.setTag(tagBean);
-        api.oauth2(WeSmile.appid, WeSmile.appSecret, "011jXYAb1knvWw0jcIAb1RdMAb1jXYAK", "authorization_code");
+        GetOpenId authorization_code = api.oauth2(WeSmile.appid, WeSmile.appSecret, "011jXYAb1knvWw0jcIAb1RdMAb1jXYAK", "authorization_code");
+
     }
 
     @Test

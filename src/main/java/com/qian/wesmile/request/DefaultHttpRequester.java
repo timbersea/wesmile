@@ -2,6 +2,7 @@ package com.qian.wesmile.request;
 
 import com.alibaba.fastjson.JSON;
 import com.qian.wesmile.WeSmile;
+import com.qian.wesmile.exception.ApiException;
 import com.qian.wesmile.model.result.APIResult;
 import com.qian.wesmile.model.result.AccessToken;
 import okhttp3.*;
@@ -26,7 +27,7 @@ public class DefaultHttpRequester implements HttpRequester {
             RequestBody requestBody = RequestBody.create(MediaType.get("application/json; charset=utf-8"), body);
             builder.post(requestBody);
         }
-        log.debug("url {} \r\n body{}", urlWithAccessToken, body);
+        log.debug("url {} \r\n body {}", urlWithAccessToken, body);
         try (Response response = client.newCall(builder.build()).execute()) {
 
             String result = new String(response.body().bytes());
@@ -36,16 +37,24 @@ public class DefaultHttpRequester implements HttpRequester {
             if (apiResult.success()) {
                 return result;
             }
-            if (apiResult.getErrcode() == 42001 || apiResult.getErrcode() == 40001) {
+            if (!url.contains("/sns/userinfo/")) {//这个接口的access token和其它接口的不是同一个东西
+                DefaultHttpRequester.accessToken = accessToken;
+            }
+            boolean apiAccessTokenInvalid = apiResult.getErrcode() == 42001 || apiResult.getErrcode() == 40001;
+            boolean notSnsOauth2 = !url.contains("/sns/userinfo");
+
+            if (apiAccessTokenInvalid && notSnsOauth2) {
                 onAccessTokenExpire();
                 doRequest(url, body);
             }
             else {
-                throw new RuntimeException("can't get correct result from " + result);
+                throw new ApiException(result);
             }
 
             log.debug("response {}", result);
             return result;
+        } catch (ApiException e) {
+            throw e;
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage(), e);
         }
@@ -67,10 +76,15 @@ public class DefaultHttpRequester implements HttpRequester {
                 String result = new String(response.body().bytes());
                 log.debug("get new access  response {}", result);
                 AccessToken accessToken = JSON.parseObject(result, AccessToken.class);
+                if (accessToken.getAccessToken() == null) {
+                    throw new ApiException(result);
+                }
                 if (!url.contains("/sns/oauth2/")) {//这个接口的access token和其它接口的不是同一个东西
                     DefaultHttpRequester.accessToken = accessToken;
                 }
                 return accessToken;
+            } catch (ApiException e) {
+                throw e;
             } catch (Exception e) {
                 throw new RuntimeException(e.getMessage(), e);
             }

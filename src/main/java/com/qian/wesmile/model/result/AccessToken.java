@@ -4,13 +4,7 @@ public class AccessToken {
 
     private String access_token;
     private long createTimestamp = System.currentTimeMillis();
-
     private Integer expires_in;
-
-    public AccessToken(String accessToken, long createTimestamp) {
-        this.access_token = accessToken;
-        this.createTimestamp = createTimestamp;
-    }
 
     public AccessToken() {
     }
