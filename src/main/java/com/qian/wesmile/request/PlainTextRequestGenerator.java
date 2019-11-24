@@ -13,15 +13,8 @@ import java.lang.reflect.Parameter;
  * @author wuhuaiqian
  */
 public final class PlainTextRequestGenerator {
-    private Method method;
-    private Object[] paramsValue;
 
-    public PlainTextRequestGenerator(final Method method, final Object[] paramsValue) {
-        this.method = method;
-        this.paramsValue = paramsValue;
-    }
-
-    public String getUrl() {
+    public static String getUrl(final Method method, final Object[] paramsValue) {
         RelativePath annotation = method.getAnnotation(RelativePath.class);
         Parameter[] parameters = method.getParameters();
         String path = annotation.value();
@@ -34,8 +27,7 @@ public final class PlainTextRequestGenerator {
             sb.append("?access_token=");
             sb.append("%s");
             sb.append("&");
-        }
-        else {
+        } else {
             sb.append("?");
         }
         for (int i = 0; i < parameters.length; i++) {
@@ -53,8 +45,7 @@ public final class PlainTextRequestGenerator {
         return sb.toString();
     }
 
-
-    public String getJsonBody() {
+    public static String getJsonBody(final Method method, final Object[] paramsValue) {
         if (paramsValue != null && paramsValue.length > 0) {
             Class<?> aClass = paramsValue[0].getClass();
             if (!aClass.isPrimitive() && !aClass.equals(String.class)) {

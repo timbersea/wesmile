@@ -9,6 +9,5 @@ public interface HttpRequester {
 
     String doRequest(String url, String jsonBody);
 
-    AccessToken getAccessToken();
-
+    String sendHttpRequest(String url, String body);
 }

@@ -1,18 +1,79 @@
 package com.qian.wesmile.request;
 
+import com.alibaba.fastjson.JSON;
+import com.qian.wesmile.WeSmile;
+import com.qian.wesmile.exception.ApiException;
+import com.qian.wesmile.model.result.APIResult;
 import com.qian.wesmile.model.result.AccessToken;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author wuhuaiqian
  */
-public abstract class AbstractHttpRequester implements HttpRequester {
-    private static OkHttpClient client = new OkHttpClient();
-    private static Request.Builder builder = new Request.Builder();
-    String accesstoken = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=APPSECRET";
+public abstract class AbstractHttpRequester {
+    private static final Logger log = LoggerFactory.getLogger(AbstractHttpRequester.class);
+    private static AccessToken accessToken = new AccessToken();
+    private static String GET_ACCESS_TOKEN_URL_PATTERN = "%s/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s";
 
-    public AccessToken getAccessToken() {
-        return null;
+    public String call(String url, String body) {
+        return doRequest(url, body);
     }
+
+    private String doRequest(String url, String body) {
+        String urlWithAccessToken = String.format(url, getAccessToken().getAccessToken());
+        String result = sendHttpRequest(urlWithAccessToken, body);
+        log.debug("url {} \r\n body {}", urlWithAccessToken, body);
+        log.debug("result {}", result);
+        APIResult apiResult = JSON.parseObject(result, APIResult.class);
+        if (apiResult.success()) {
+            return result;
+        }
+        if (!url.contains("/sns/userinfo/")) {//这个接口的access token和其它接口的不是同一个东西
+            AbstractHttpRequester.accessToken = accessToken;
+        }
+        boolean apiAccessTokenInvalid = apiResult.getErrcode() == 42001 || apiResult.getErrcode() == 40001;
+        boolean notSnsOauth2 = !url.contains("/sns/userinfo");
+        if (apiAccessTokenInvalid && notSnsOauth2) {
+            onAccessTokenExpire();
+            doRequest(url, body);
+        } else {
+            throw new ApiException(result);
+        }
+
+        log.debug("response {}", result);
+        return result;
+    }
+
+    private void onAccessTokenExpire() {
+        AbstractHttpRequester.accessToken.setCreateTimestamp(-1);
+    }
+
+    private AccessToken getAccessToken() {
+        if (AbstractHttpRequester.accessToken.isExpire()) {
+            String url = String.format(GET_ACCESS_TOKEN_URL_PATTERN, WeSmile.domain, WeSmile.appid, WeSmile.appSecret);
+            log.info("access token {} expired now do request", AbstractHttpRequester.accessToken);
+            log.debug("get new access token url:{}", url);
+            String result = sendHttpRequest(url, null);
+
+            log.debug("get new access  response {}", result);
+            AccessToken accessToken = JSON.parseObject(result, AccessToken.class);
+            if (accessToken.getAccessToken() == null) {
+                throw new ApiException(result);
+            }
+            if (!url.contains("/sns/oauth2/")) {//这个接口的access token和其它接口的不是同一个东西
+                AbstractHttpRequester.accessToken = accessToken;
+            }
+            return accessToken;
+
+        } else {
+            log.info("use cached access token {}", AbstractHttpRequester.accessToken);
+            return AbstractHttpRequester.accessToken;
+        }
+
+    }
+
+    public abstract String sendHttpRequest(String url, String body);
 }

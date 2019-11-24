@@ -2,8 +2,10 @@ package com.qian.wesmile.proxy;
 
 import com.alibaba.fastjson.JSON;
 import com.qian.wesmile.annotation.RelativePath;
+import com.qian.wesmile.exception.ApiException;
 import com.qian.wesmile.model.result.APIResult;
-import com.qian.wesmile.request.DefaultHttpRequester;
+import com.qian.wesmile.request.AbstractHttpRequester;
+import com.qian.wesmile.request.OkHttpRequester;
 import com.qian.wesmile.request.PlainTextRequestGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +15,9 @@ import java.lang.reflect.Method;
 
 public class APIInvocationHandler implements InvocationHandler {
     private static final Logger log = LoggerFactory.getLogger(APIInvocationHandler.class);
+
+   private AbstractHttpRequester defaultHttpRequester = new OkHttpRequester();
+
 
     public APIInvocationHandler() {
     }
@@ -24,14 +29,10 @@ public class APIInvocationHandler implements InvocationHandler {
         }
         checkAnnotation(method);
 
-        PlainTextRequestGenerator generator = new PlainTextRequestGenerator(method, args);
-        String url = generator.getUrl();
-        String jsonBody = generator.getJsonBody();
+        String url = PlainTextRequestGenerator.getUrl(method, args);
+        String jsonBody = PlainTextRequestGenerator.getJsonBody(method, args);
 
-        DefaultHttpRequester defaultHttpRequester = new DefaultHttpRequester();
-        String result = defaultHttpRequester.doRequest(url, jsonBody);
-
-        //String result = doAPIRequest(method, args);
+        String result = defaultHttpRequester.call(url, jsonBody);
         Class<?> returnType = method.getReturnType();
         if (void.class == returnType) {
             return null;
@@ -42,10 +43,10 @@ public class APIInvocationHandler implements InvocationHandler {
             if (apiResult.success()) {
                 return JSON.parseObject(result, returnType);
             } else {
-                throw new RuntimeException(result + " can't parse to {}" + returnType);
+                throw new ApiException(result);
             }
         } catch (Exception e) {
-            throw new RuntimeException(result + " can't parse to {}" + returnType);
+            throw new ApiException(result);
         }
     }
 
@@ -53,5 +54,9 @@ public class APIInvocationHandler implements InvocationHandler {
         if (!method.isAnnotationPresent(RelativePath.class)) {
             throw new RuntimeException(method.toString() + " must with annotation ＠RelativePath ");
         }
+    }
+
+    public void setDefaultHttpRequester(AbstractHttpRequester defaultHttpRequester) {
+        this.defaultHttpRequester = defaultHttpRequester;
     }
 }

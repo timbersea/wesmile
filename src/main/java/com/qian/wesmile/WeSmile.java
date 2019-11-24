@@ -13,12 +13,11 @@ import java.lang.reflect.Proxy;
  */
 public class WeSmile {
     private static final Logger log = LoggerFactory.getLogger(WeSmile.class);
+    private static final String DEFAULT_DOMAIN = "https://api.weixin.qq.com";
     public static String appid;
     public static String appSecret;
-    private static final String DEFAULT_DOMAIN = "https://api.weixin.qq.com";
     public static String domain = DEFAULT_DOMAIN;
     private APIInvocationHandler apiInvocationHandler = new APIInvocationHandler();
-    private AbstractHttpRequester abstractHttpRequester;
 
 
     public WeSmile() {
@@ -26,7 +25,6 @@ public class WeSmile {
 
     @PostConstruct
     public void postConstruct() {
-
         log.info("we smile use domain:{} appid:{} appSecret:{}", domain, appid, appSecret);
     }
 
@@ -56,12 +54,12 @@ public class WeSmile {
         WeSmile.domain = domain;
     }
 
-    public AbstractHttpRequester getAbstractHttpRequester() {
-        return abstractHttpRequester;
+    public void setDefaultHttpRequester(AbstractHttpRequester defaultHttpRequester) {
+        if (defaultHttpRequester == null) {
+            throw new IllegalArgumentException("defaultHttpRequester should't be null");
+        }
+        apiInvocationHandler.setDefaultHttpRequester(defaultHttpRequester);
     }
 
-    public void setAbstractHttpRequester(AbstractHttpRequester abstractHttpRequester) {
-        this.abstractHttpRequester = abstractHttpRequester;
-    }
 
 }
