@@ -54,7 +54,7 @@ public class WeSmile {
         WeSmile.domain = domain;
     }
 
-    public void setDefaultHttpRequester(AbstractHttpRequester defaultHttpRequester) {
+    public void setHttpRequester(AbstractHttpRequester defaultHttpRequester) {
         if (defaultHttpRequester == null) {
             throw new IllegalArgumentException("defaultHttpRequester should't be null");
         }
