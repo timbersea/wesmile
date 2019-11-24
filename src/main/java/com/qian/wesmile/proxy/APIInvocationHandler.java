@@ -1,6 +1,7 @@
 package com.qian.wesmile.proxy;
 
 import com.alibaba.fastjson.JSON;
+import com.qian.wesmile.WeSmile;
 import com.qian.wesmile.annotation.RelativePath;
 import com.qian.wesmile.exception.ApiException;
 import com.qian.wesmile.model.result.APIResult;
@@ -16,7 +17,7 @@ import java.lang.reflect.Method;
 public class APIInvocationHandler implements InvocationHandler {
     private static final Logger log = LoggerFactory.getLogger(APIInvocationHandler.class);
 
-   private AbstractHttpRequester defaultHttpRequester = new OkHttpRequester();
+    private AbstractHttpRequester defaultHttpRequester = new OkHttpRequester();
 
 
     public APIInvocationHandler() {
@@ -41,7 +42,7 @@ public class APIInvocationHandler implements InvocationHandler {
             //TODO 这里无法正常解析出数据到底是返回一个属性是空的对象还是直接招聘运行时异常有等商榷
             APIResult apiResult = JSON.parseObject(result, APIResult.class);
             if (apiResult.success()) {
-                return JSON.parseObject(result, returnType);
+                return WeSmile.jsonSerializer.deserialize(result, returnType);
             } else {
                 throw new ApiException(result);
             }

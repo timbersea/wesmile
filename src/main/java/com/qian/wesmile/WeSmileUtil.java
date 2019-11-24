@@ -5,7 +5,7 @@ public class WeSmileUtil {
     private static WeSmile weSmile;
 
     /**
-     * init wiht default domain @see DEFAULT_DOMAIN
+     * init use default domain @see DEFAULT_DOMAIN
      *
      * @param appid     your appid
      * @param appSecret your appSecret

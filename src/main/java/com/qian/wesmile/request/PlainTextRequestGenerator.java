@@ -1,6 +1,5 @@
 package com.qian.wesmile.request;
 
-import com.alibaba.fastjson.JSON;
 import com.qian.wesmile.WeSmile;
 import com.qian.wesmile.annotation.JsonBody;
 import com.qian.wesmile.annotation.ParamName;
@@ -49,7 +48,7 @@ public final class PlainTextRequestGenerator {
         if (paramsValue != null && paramsValue.length > 0) {
             Class<?> aClass = paramsValue[0].getClass();
             if (!aClass.isPrimitive() && !aClass.equals(String.class)) {
-                return JSON.toJSONString(paramsValue[0]);
+                return WeSmile.jsonSerializer.serialize(paramsValue[0]);
             }
         }
         return null;

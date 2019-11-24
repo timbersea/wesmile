@@ -5,8 +5,6 @@ import com.qian.wesmile.WeSmile;
 import com.qian.wesmile.exception.ApiException;
 import com.qian.wesmile.model.result.APIResult;
 import com.qian.wesmile.model.result.AccessToken;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,10 +29,9 @@ public abstract class AbstractHttpRequester {
         if (apiResult.success()) {
             return result;
         }
-        if (!url.contains("/sns/userinfo/")) {//这个接口的access token和其它接口的不是同一个东西
-            AbstractHttpRequester.accessToken = accessToken;
-        }
         boolean apiAccessTokenInvalid = apiResult.getErrcode() == 42001 || apiResult.getErrcode() == 40001;
+
+        //这个接口返回access token无效，是因为通过/sns/oauth2/，code换取到access token无效，并不能通过刷新token来解决问题
         boolean notSnsOauth2 = !url.contains("/sns/userinfo");
         if (apiAccessTokenInvalid && notSnsOauth2) {
             onAccessTokenExpire();
@@ -75,5 +72,13 @@ public abstract class AbstractHttpRequester {
 
     }
 
+    /**
+     * send http request body data to the url by your self
+     * you may use other http client
+     *
+     * @param url
+     * @param body
+     * @return the response String result
+     */
     public abstract String sendHttpRequest(String url, String body);
 }

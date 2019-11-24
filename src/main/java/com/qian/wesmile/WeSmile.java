@@ -1,5 +1,7 @@
 package com.qian.wesmile;
 
+import com.qian.wesmile.jsonserializer.FastJsonSerializer;
+import com.qian.wesmile.jsonserializer.JsonSerializer;
 import com.qian.wesmile.proxy.APIInvocationHandler;
 import com.qian.wesmile.request.AbstractHttpRequester;
 import org.slf4j.Logger;
@@ -18,7 +20,7 @@ public class WeSmile {
     public static String appSecret;
     public static String domain = DEFAULT_DOMAIN;
     private APIInvocationHandler apiInvocationHandler = new APIInvocationHandler();
-
+    public static JsonSerializer jsonSerializer = new FastJsonSerializer();
 
     public WeSmile() {
     }
@@ -61,5 +63,10 @@ public class WeSmile {
         apiInvocationHandler.setDefaultHttpRequester(defaultHttpRequester);
     }
 
-
+    public static void setJsonSerialer(JsonSerializer serializer) {
+        if (serializer == null) {
+            throw new IllegalArgumentException("serializer should't be null");
+        }
+        WeSmile.jsonSerializer = serializer;
+    }
 }
