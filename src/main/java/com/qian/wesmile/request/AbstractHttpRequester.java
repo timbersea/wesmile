@@ -35,37 +35,34 @@ public abstract class AbstractHttpRequester {
         boolean notSnsOauth2 = !url.contains("/sns/userinfo");
         if (apiAccessTokenInvalid && notSnsOauth2) {
             onAccessTokenExpire();
-            doRequest(url, body);
-        } else {
+            return doRequest(url, body);
+        }
+        else {
             throw new ApiException(result);
         }
-
-        log.debug("response {}", result);
-        return result;
     }
 
     private void onAccessTokenExpire() {
         AbstractHttpRequester.accessToken.setCreateTimestamp(-1);
     }
 
-    private AccessToken getAccessToken() {
+    private synchronized AccessToken getAccessToken() {
         if (AbstractHttpRequester.accessToken.isExpire()) {
-            synchronized (AbstractHttpRequester.accessToken) {
-                String url = String.format(GET_ACCESS_TOKEN_URL_PATTERN, WeSmile.domain, WeSmile.appid, WeSmile.appSecret);
-                log.info("access token {} expired now do request", AbstractHttpRequester.accessToken);
-                log.debug("get new access token url:{}", url);
-                String result = sendHttpRequest(url, null);
-                log.debug("get new access  response {}", result);
-                AccessToken accessToken = JSON.parseObject(result, AccessToken.class);
-                if (accessToken.getAccessToken() == null) {
-                    throw new ApiException(result);
-                }
-                if (!url.contains("/sns/oauth2/")) {//这个接口的access token和其它接口的不是同一个东西
-                    AbstractHttpRequester.accessToken = accessToken;
-                }
-                return accessToken;
+            String url = String.format(GET_ACCESS_TOKEN_URL_PATTERN, WeSmile.domain, WeSmile.appid, WeSmile.appSecret);
+            log.info("access token {} expired now do request", AbstractHttpRequester.accessToken);
+            log.debug("get new access token url:{}", url);
+            String result = sendHttpRequest(url, null);
+            log.debug("get new access  response {}", result);
+            AccessToken accessToken = JSON.parseObject(result, AccessToken.class);
+            if (accessToken.getAccessToken() == null) {
+                throw new ApiException(result);
             }
-        } else {
+            if (!url.contains("/sns/oauth2/")) {//这个接口的access token和其它接口的不是同一个东西
+                AbstractHttpRequester.accessToken = accessToken;
+            }
+            return accessToken;
+        }
+        else {
             log.info("use cached access token {}", AbstractHttpRequester.accessToken);
             return AbstractHttpRequester.accessToken;
         }
