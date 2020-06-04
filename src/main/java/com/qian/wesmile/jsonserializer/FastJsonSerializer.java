@@ -8,6 +8,7 @@ public class FastJsonSerializer implements JsonSerializer {
         return JSON.toJSONString(o);
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public Object deserialize(String jsonString, Class clazz) {
         return JSON.parseObject(jsonString, clazz);

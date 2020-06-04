@@ -34,13 +34,13 @@ public class WeSmile {
      * get you api iml same as the interface of Mybatis
      *
      * @param clazz the class which the API define in the interface
-     * @param <T>
+     * @param <T>   t
      * @return the instance
      */
-    //TODO maybe should cache the proxy class
+    //maybe should cache the proxy class?
+    @SuppressWarnings(value = "unchecked")
     public <T> T getInstance(Class<T> clazz) {
-        T proxy = (T) Proxy.newProxyInstance(clazz.getClassLoader(), new Class[]{clazz}, apiInvocationHandler);
-        return proxy;
+        return (T) Proxy.newProxyInstance(clazz.getClassLoader(), new Class[]{clazz}, apiInvocationHandler);
     }
 
 
