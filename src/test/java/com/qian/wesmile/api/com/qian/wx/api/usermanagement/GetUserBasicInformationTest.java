@@ -22,7 +22,8 @@ public class GetUserBasicInformationTest extends APITestBase<GetUserBasicInforma
 
     @Test
     public void snsUserInfo() {
-        api.snsUserInfo("aa", "dfd", "zh_CN");
+        //这里的accessToken应该是oauth2这个接口中返回的accessToken
+        api.snsUserInfo("aa", "oVq-Jwh__sCYrMO3EekXFtx09wdQ", "zh_CN");
 
     }
 }
