@@ -9,5 +9,6 @@ public class JsTicketApiTest extends APITestBase<JsTicketApi> {
     @Test
     public void test() {
         JsTicketResult wx_card = api.getticket("wx_card");
+        result = wx_card;
     }
 }

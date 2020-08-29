@@ -1,24 +1,30 @@
 package com.qian.wesmile.model.result;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class AccessToken {
 
-    private String access_token;
+    @JsonProperty("access_token")
+    private String accessToken;
+    @JsonIgnore
     private long createTimestamp = System.currentTimeMillis();
-    private Integer expires_in;
+    @JsonProperty("expires_in")
+    private Integer expiresIn;
 
     public AccessToken() {
     }
 
     public boolean isExpire() {
-        return access_token == null || System.currentTimeMillis() - createTimestamp > 7000 * 1000;
+        return accessToken == null || System.currentTimeMillis() - createTimestamp > 7000 * 1000;
     }
 
     public String getAccessToken() {
-        return access_token;
+        return accessToken;
     }
 
     public void setAccessToken(String accessToken) {
-        this.access_token = accessToken;
+        this.accessToken = accessToken;
     }
 
     public long getCreateTimestamp() {
@@ -29,12 +35,13 @@ public class AccessToken {
         this.createTimestamp = createTimestamp;
     }
 
+
     @Override
     public String toString() {
         return "AccessToken{" +
-                "access_token='" + access_token + '\'' +
+                "access_token='" + accessToken + '\'' +
                 ", createTimestamp=" + createTimestamp +
-                ", expires_in=" + expires_in +
+                ", expires_in=" + expiresIn +
                 '}';
     }
 }

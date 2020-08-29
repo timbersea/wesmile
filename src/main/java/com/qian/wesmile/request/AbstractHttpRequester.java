@@ -1,10 +1,10 @@
 package com.qian.wesmile.request;
 
-import com.alibaba.fastjson.JSON;
 import com.qian.wesmile.WeSmile;
 import com.qian.wesmile.exception.ApiException;
 import com.qian.wesmile.model.result.APIResult;
 import com.qian.wesmile.model.result.AccessToken;
+import com.qian.wesmile.util.JsonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +25,7 @@ public abstract class AbstractHttpRequester {
         String result = sendHttpRequest(urlWithAccessToken, body);
         log.debug("url {} \r\n body {}", urlWithAccessToken, body);
         log.debug("result {}", result);
-        APIResult apiResult = JSON.parseObject(result, APIResult.class);
+        APIResult apiResult = JsonUtil.deserialize(result, APIResult.class);
         if (apiResult.success()) {
             return result;
         }
@@ -53,7 +53,7 @@ public abstract class AbstractHttpRequester {
             log.debug("get new access token url:{}", url);
             String result = sendHttpRequest(url, null);
             log.debug("get new access  response {}", result);
-            AccessToken accessToken = JSON.parseObject(result, AccessToken.class);
+            AccessToken accessToken = JsonUtil.deserialize(result, AccessToken.class);
             if (accessToken.getAccessToken() == null) {
                 throw new ApiException(result);
             }

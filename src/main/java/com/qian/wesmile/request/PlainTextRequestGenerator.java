@@ -4,6 +4,7 @@ import com.qian.wesmile.WeSmile;
 import com.qian.wesmile.annotation.JsonBody;
 import com.qian.wesmile.annotation.ParamName;
 import com.qian.wesmile.annotation.RelativePath;
+import com.qian.wesmile.util.JsonUtil;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -48,7 +49,7 @@ public final class PlainTextRequestGenerator {
         if (paramsValue != null && paramsValue.length > 0) {
             Class<?> aClass = paramsValue[0].getClass();
             if (!aClass.isPrimitive() && !aClass.equals(String.class)) {
-                return WeSmile.jsonSerializer.serialize(paramsValue[0]);
+                return JsonUtil.serialize(paramsValue[0]);
             }
         }
         return null;

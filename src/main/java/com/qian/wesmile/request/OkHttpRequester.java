@@ -1,13 +1,6 @@
 package com.qian.wesmile.request;
 
-import com.alibaba.fastjson.JSON;
-import com.qian.wesmile.WeSmile;
-import com.qian.wesmile.exception.ApiException;
-import com.qian.wesmile.model.result.APIResult;
-import com.qian.wesmile.model.result.AccessToken;
 import okhttp3.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 

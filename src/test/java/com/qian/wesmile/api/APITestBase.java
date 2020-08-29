@@ -1,11 +1,11 @@
 package com.qian.wesmile.api;
 
-import com.alibaba.fastjson.JSON;
 import com.qian.wesmile.WeSmile;
 import com.qian.wesmile.WeSmileUtil;
 import com.qian.wesmile.api.analytics.UserAnalysisData;
 import com.qian.wesmile.api.config.Config;
 import com.qian.wesmile.api.config.MyAPIConfig;
+import com.qian.wesmile.util.JsonUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.slf4j.Logger;
@@ -33,7 +33,7 @@ public abstract class APITestBase<T> {
 
     @After
     public void logResult() {
-        log.info(JSON.toJSONString(result));
+        log.info(JsonUtil.serialize(result));
         WeSmile weSmile = new WeSmile();
 
         UserAnalysisData instance = weSmile.getInstance(UserAnalysisData.class);
