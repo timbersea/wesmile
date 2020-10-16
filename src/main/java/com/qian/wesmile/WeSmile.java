@@ -9,20 +9,27 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
 import java.lang.reflect.Proxy;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author wuhuaiqian
  */
 public class WeSmile {
     private static final Logger log = LoggerFactory.getLogger(WeSmile.class);
+
     private static final String DEFAULT_DOMAIN = "https://api.weixin.qq.com";
+
     public static String appid;
+
     public static String appSecret;
+
     public static String domain = DEFAULT_DOMAIN;
 
     private final APIInvocationHandler apiInvocationHandler = new APIInvocationHandler();
 
     public static JsonSerializer jsonSerializer = new FastJsonSerializer();
+
+    private static final ConcurrentHashMap cache = new ConcurrentHashMap();
 
     public WeSmile() {
     }
@@ -42,7 +49,8 @@ public class WeSmile {
     //maybe should cache the proxy class?
     @SuppressWarnings(value = "unchecked")
     public <T> T getInstance(Class<T> clazz) {
-        return (T) Proxy.newProxyInstance(clazz.getClassLoader(), new Class[]{clazz}, apiInvocationHandler);
+        return (T) cache.computeIfAbsent(clazz,
+                k -> Proxy.newProxyInstance(clazz.getClassLoader(), new Class[]{clazz}, apiInvocationHandler));
     }
 
 
