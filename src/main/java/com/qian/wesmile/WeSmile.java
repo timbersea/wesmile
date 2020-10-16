@@ -25,7 +25,6 @@ public class WeSmile {
     public static JsonSerializer jsonSerializer = new FastJsonSerializer();
 
     public WeSmile() {
-        log.info("we smile use domain:{} appid:{} appSecret:{}", domain, appid, appSecret);
     }
 
     @PostConstruct

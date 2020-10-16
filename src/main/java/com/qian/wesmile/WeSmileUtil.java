@@ -1,8 +1,14 @@
 package com.qian.wesmile;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class WeSmileUtil {
     private static WeSmile weSmile;
+
+    private static final Logger log = LoggerFactory.getLogger(WeSmileUtil.class);
+
 
     /**
      * init use default domain @see DEFAULT_DOMAIN
@@ -14,6 +20,7 @@ public class WeSmileUtil {
         weSmile = new WeSmile();
         weSmile.setAppid(appid);
         weSmile.setAppSecret(appSecret);
+        log.info("we smile use domain:{} appid:{} appSecret:{}", WeSmile.domain, appid, appSecret);
     }
 
     /**
