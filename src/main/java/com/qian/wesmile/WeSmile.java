@@ -19,10 +19,13 @@ public class WeSmile {
     public static String appid;
     public static String appSecret;
     public static String domain = DEFAULT_DOMAIN;
-    private APIInvocationHandler apiInvocationHandler = new APIInvocationHandler();
+
+    private final APIInvocationHandler apiInvocationHandler = new APIInvocationHandler();
+
     public static JsonSerializer jsonSerializer = new FastJsonSerializer();
 
     public WeSmile() {
+        log.info("we smile use domain:{} appid:{} appSecret:{}", domain, appid, appSecret);
     }
 
     @PostConstruct
