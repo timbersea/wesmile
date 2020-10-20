@@ -2,6 +2,7 @@ package com.qian.wesmile.api.usermanagement;
 
 import com.qian.wesmile.annotation.ParamName;
 import com.qian.wesmile.annotation.RelativePath;
+import com.qian.wesmile.model.result.Code2Session;
 import com.qian.wesmile.model.result.GetOpenId;
 import com.qian.wesmile.model.result.SnsUserInfo;
 import com.qian.wesmile.model.result.UserInfo;
@@ -32,13 +33,28 @@ public interface GetUserBasicInformation {
                      @ParamName("code") String code,
                      @ParamName("grant_type") String grant_type);
 
+    /**
+     * 登录凭证校验
+     *
+     * @param appid
+     * @param secret
+     * @param js_code
+     * @param grant_type use default vale authorization_code
+     * @return
+     */
+    @RelativePath("/sns/jscode2session")
+    Code2Session code2Session(@ParamName("appid") String appid,
+                              @ParamName("secret") String secret,
+                              @ParamName("js_code") String js_code,
+                              @ParamName("grant_type") String grant_type);
+
 
     /**
      * 拉取用户信息(需scope为 snsapi_userinfo)
      *
      * @param accessToken
      * @param openid
-     * @param lang  返回国家地区语言版本，zh_CN 简体，zh_TW 繁体，en 英语
+     * @param lang        返回国家地区语言版本，zh_CN 简体，zh_TW 繁体，en 英语
      * @return
      */
     @RelativePath("/sns/userinfo")
