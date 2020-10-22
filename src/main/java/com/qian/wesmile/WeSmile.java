@@ -1,7 +1,5 @@
 package com.qian.wesmile;
 
-import com.qian.wesmile.jsonserializer.FastJsonSerializer;
-import com.qian.wesmile.jsonserializer.JsonSerializer;
 import com.qian.wesmile.proxy.APIInvocationHandler;
 import com.qian.wesmile.request.AbstractHttpRequester;
 import org.slf4j.Logger;
@@ -27,7 +25,6 @@ public class WeSmile {
 
     private final APIInvocationHandler apiInvocationHandler = new APIInvocationHandler();
 
-    public static JsonSerializer jsonSerializer = new FastJsonSerializer();
 
     private static final ConcurrentHashMap cache = new ConcurrentHashMap();
 
@@ -71,12 +68,5 @@ public class WeSmile {
             throw new IllegalArgumentException("defaultHttpRequester should't be null");
         }
         apiInvocationHandler.setDefaultHttpRequester(defaultHttpRequester);
-    }
-
-    public static void setJsonSerialer(JsonSerializer serializer) {
-        if (serializer == null) {
-            throw new IllegalArgumentException("serializer should't be null");
-        }
-        WeSmile.jsonSerializer = serializer;
     }
 }
