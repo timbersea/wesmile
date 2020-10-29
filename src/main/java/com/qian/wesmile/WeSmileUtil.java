@@ -1,6 +1,7 @@
 package com.qian.wesmile;
 
 
+import com.qian.wesmile.spi.AccessTokenManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +22,13 @@ public class WeSmileUtil {
         weSmile.setAppid(appid);
         weSmile.setAppSecret(appSecret);
         log.info("we smile use domain:{} appid:{} appSecret:{}", WeSmile.domain, appid, appSecret);
+    }
+
+    public static void setAccessTokenManager(AccessTokenManager accessTokenManager) {
+        if (weSmile == null) {
+            throw new RuntimeException("call com.qian.wesmile.WeSmileUtil.init(java.lang.String, java.lang.String) at first");
+        }
+        weSmile.setAccessTokenManager(accessTokenManager);
     }
 
     /**

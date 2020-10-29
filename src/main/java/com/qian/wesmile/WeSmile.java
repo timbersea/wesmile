@@ -2,6 +2,8 @@ package com.qian.wesmile;
 
 import com.qian.wesmile.proxy.APIInvocationHandler;
 import com.qian.wesmile.request.AbstractHttpRequester;
+import com.qian.wesmile.spi.AccessTokenManager;
+import com.qian.wesmile.spi.MemoryAccessTokenManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +29,8 @@ public class WeSmile {
 
 
     private static final ConcurrentHashMap cache = new ConcurrentHashMap();
+
+    public static AccessTokenManager accessTokenManager = new MemoryAccessTokenManager();
 
     public WeSmile() {
     }
@@ -65,8 +69,17 @@ public class WeSmile {
 
     public void setHttpRequester(AbstractHttpRequester defaultHttpRequester) {
         if (defaultHttpRequester == null) {
-            throw new IllegalArgumentException("defaultHttpRequester should't be null");
+            throw new IllegalArgumentException("defaultHttpRequester shouldn't be null");
         }
         apiInvocationHandler.setDefaultHttpRequester(defaultHttpRequester);
+    }
+
+    public AccessTokenManager getAccessTokenManager() {
+        return accessTokenManager;
+    }
+
+    public void setAccessTokenManager(AccessTokenManager accessTokenManager) {
+        log.debug("use AccessTokenManager:{}", accessTokenManager.getClass().getName());
+        WeSmile.accessTokenManager = accessTokenManager;
     }
 }
