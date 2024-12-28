@@ -1,7 +1,7 @@
 package com.qian.wesmile.spi;
 
 public class MemoryAccessTokenManager implements AccessTokenManager {
-    public static String ACCESS_TOKEN;
+    private String ACCESS_TOKEN;
 
     @Override
     public String getAccessToken() {

@@ -1,6 +1,5 @@
 package com.qian.wesmile.api.com.qian.wx.api.usermanagement;
 
-import com.qian.wesmile.WeSmile;
 import com.qian.wesmile.api.APITestBase;
 import com.qian.wesmile.api.usermanagement.GetUserBasicInformation;
 import com.qian.wesmile.model.param.UserTag;
@@ -16,7 +15,7 @@ public class GetUserBasicInformationTest extends APITestBase<GetUserBasicInforma
         tagBean.setId(100);
         tagBean.setName(Math.random() + "");
         userTag.setTag(tagBean);
-        GetOpenId authorization_code = api.oauth2(WeSmile.appid, WeSmile.appSecret, "011jXYAb1knvWw0jcIAb1RdMAb1jXYAK", "authorization_code");
+        GetOpenId authorization_code = api.oauth2("","", "011jXYAb1knvWw0jcIAb1RdMAb1jXYAK", "authorization_code");
 
     }
 
