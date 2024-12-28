@@ -21,7 +21,6 @@ public class WeSmileUtil {
         weSmile = new WeSmile();
         weSmile.setAppid(appid);
         weSmile.setAppSecret(appSecret);
-        log.info("we smile use domain:{} appid:{} appSecret:{}", WeSmile.domain, appid, appSecret);
     }
 
     public static void setAccessTokenManager(AccessTokenManager accessTokenManager) {

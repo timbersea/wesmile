@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * 无法正确返回结果，所以需要你自己行将所有接口参数及返回bean的类型声明
  */
 public class JsonUtil {
-    private static ObjectMapper objectMapper = new ObjectMapper();
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     static {
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);

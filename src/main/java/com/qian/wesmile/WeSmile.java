@@ -3,11 +3,9 @@ package com.qian.wesmile;
 import com.qian.wesmile.proxy.APIInvocationHandler;
 import com.qian.wesmile.request.AbstractHttpRequester;
 import com.qian.wesmile.spi.AccessTokenManager;
-import com.qian.wesmile.spi.MemoryAccessTokenManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.PostConstruct;
 import java.lang.reflect.Proxy;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -19,23 +17,23 @@ public class WeSmile {
 
     private static final String DEFAULT_DOMAIN = "https://api.weixin.qq.com";
 
-    public static String appid;
-
-    public static String appSecret;
-
-    public static String domain = DEFAULT_DOMAIN;
+    private final ConcurrentHashMap<Class,Object> cache = new ConcurrentHashMap<>();
+    private String appid;
+    private String appSecret;
+    private final String domain = DEFAULT_DOMAIN;
 
     private final APIInvocationHandler apiInvocationHandler = new APIInvocationHandler();
 
+    {
+        apiInvocationHandler.setAppid(appid);
+        apiInvocationHandler.setAppSecret(appSecret);
+        apiInvocationHandler.setDomain(domain);
+    }
 
-    private static final ConcurrentHashMap cache = new ConcurrentHashMap();
-
-    public static AccessTokenManager accessTokenManager = new MemoryAccessTokenManager();
 
     public WeSmile() {
     }
 
-    @PostConstruct
     public void postConstruct() {
         log.info("we smile use domain:{} appid:{} appSecret:{}", domain, appid, appSecret);
     }
@@ -54,32 +52,23 @@ public class WeSmile {
                 k -> Proxy.newProxyInstance(clazz.getClassLoader(), new Class[]{clazz}, apiInvocationHandler));
     }
 
-
     public void setAppid(String appid) {
-        WeSmile.appid = appid;
+        this.apiInvocationHandler.setAppid(appid);
     }
 
     public void setAppSecret(String appSecret) {
-        WeSmile.appSecret = appSecret;
+        this.apiInvocationHandler.setAppSecret(appSecret);
     }
 
     public void setDomain(String domain) {
-        WeSmile.domain = domain;
+        this.apiInvocationHandler.setDomain(domain);
     }
 
-    public void setHttpRequester(AbstractHttpRequester defaultHttpRequester) {
-        if (defaultHttpRequester == null) {
-            throw new IllegalArgumentException("defaultHttpRequester shouldn't be null");
-        }
-        apiInvocationHandler.setDefaultHttpRequester(defaultHttpRequester);
-    }
-
-    public AccessTokenManager getAccessTokenManager() {
-        return accessTokenManager;
+    public void setHttpRequester(AbstractHttpRequester abstractHttpRequester) {
+        this.apiInvocationHandler.setAbstractHttpRequester(abstractHttpRequester);
     }
 
     public void setAccessTokenManager(AccessTokenManager accessTokenManager) {
-        log.debug("use AccessTokenManager:{}", accessTokenManager.getClass().getName());
-        WeSmile.accessTokenManager = accessTokenManager;
+        this.apiInvocationHandler.setAccessTokenManger(accessTokenManager);
     }
 }
