@@ -1,9 +1,11 @@
 package com.qian.wesmile.api.usermanagement;
 
+import com.qian.wesmile.annotation.Api;
 import com.qian.wesmile.annotation.ParamName;
 import com.qian.wesmile.annotation.RelativePath;
 import com.qian.wesmile.model.result.UserList;
 
+@Api
 public interface GettingAUserList {
 
     /**

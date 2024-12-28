@@ -1,11 +1,13 @@
 package com.qian.wesmile.api.usermanagement;
 
+import com.qian.wesmile.annotation.Api;
 import com.qian.wesmile.annotation.JsonBody;
 import com.qian.wesmile.annotation.RelativePath;
 import com.qian.wesmile.model.param.BeginOpenId;
 import com.qian.wesmile.model.param.OpenIdList;
 import com.qian.wesmile.model.result.ManageBlacklistReuslt;
 
+@Api
 public interface ManageBlacklist {
 
     /**

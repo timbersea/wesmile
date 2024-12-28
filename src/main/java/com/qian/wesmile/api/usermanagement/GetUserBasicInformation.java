@@ -1,5 +1,6 @@
 package com.qian.wesmile.api.usermanagement;
 
+import com.qian.wesmile.annotation.Api;
 import com.qian.wesmile.annotation.ParamName;
 import com.qian.wesmile.annotation.RelativePath;
 import com.qian.wesmile.model.result.Code2Session;
@@ -7,6 +8,7 @@ import com.qian.wesmile.model.result.GetOpenId;
 import com.qian.wesmile.model.result.SnsUserInfo;
 import com.qian.wesmile.model.result.UserInfo;
 
+@Api
 public interface GetUserBasicInformation {
     String grantType = "authorization_code";
 
