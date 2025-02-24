@@ -23,7 +23,7 @@ public class OkHttpRequester extends AbstractHttpRequester {
         try (Response response = client.newCall(build).execute()) {
             return new String(response.body().bytes());
         } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e.getCause());
+            throw new RuntimeException(e.toString(), e.getCause());
         }
     }
 
